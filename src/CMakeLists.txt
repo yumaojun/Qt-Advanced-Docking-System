@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 project(QtAdvancedDockingSystem LANGUAGES CXX VERSION ${VERSION_SHORT})
 include(GNUInstallDirs)
+
+# Locate Qt6 directories
+if (MSVC)
+    set(QT_DIR "C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6")
+endif ()
+
+if(NOT DEFINED ADS_HEADERPATH)
+    set(ADS_HEADERPATH ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
 if (${QT_VERSION_MAJOR})
   message(STATUS "Forced to use Qt version ${QT_VERSION_MAJOR}")
   find_package(QT NAMES Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
@@ -162,7 +172,10 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${library_name}ConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${library_name}
 )
 
-target_include_directories(${library_name} PUBLIC
+target_include_directories(${library_name} 
+PRIVATE
+    ${ADS_HEADERPATH}
+PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
